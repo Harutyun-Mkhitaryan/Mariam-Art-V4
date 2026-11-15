@@ -15,7 +15,6 @@ shots/
 .codex/
 .specify/
 .vscode/
-.github/workflows/deploy-pages.yml
 /qa-*.png
 /qa-*.cjs
 /editorial-*.png
