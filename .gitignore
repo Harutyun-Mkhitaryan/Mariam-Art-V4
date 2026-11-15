@@ -1,0 +1,25 @@
+node_modules/
+dist/
+.astro/
+shots/
+.DS_Store
+.env
+.env.*
+!.env.example
+.dev.vars
+.dev.vars.*
+.wrangler/
+
+# Local agent state and generated verification artifacts
+.claude/
+.codex/
+.specify/
+.vscode/
+.github/workflows/deploy-pages.yml
+/qa-*.png
+/qa-*.cjs
+/editorial-*.png
+/build-*.log
+/check-*.log
+/AGENTS.md
+/PRODUCT.md

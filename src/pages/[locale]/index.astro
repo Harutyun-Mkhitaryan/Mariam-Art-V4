@@ -1,0 +1,122 @@
+---
+import Base from "../../layouts/Base.astro";
+import Icon from "../../components/Icon.astro";
+import WorkCard from "../../components/WorkCard.astro";
+import { FORMS, asset, url } from "../../lib/config";
+import { field, localePaths, tr } from "../../lib/i18n";
+import { itemsSorted, PUBLIC_CATEGORIES } from "../../lib/artworks";
+import { breadcrumbLd } from "../../lib/seo";
+export const getStaticPaths = () => localePaths();
+const { locale } = Astro.params as { locale: string };
+const all = itemsSorted();
+const hero = all.find((w) => w.slug === "botanical-01")!;
+const works = all.slice(0, 6);
+const categories = PUBLIC_CATEGORIES.map((c) => ({ ...c, cover: all.find((w) => w.category === c.id && w.images?.main) })).filter((c) => c.cover);
+const story = all.find((w) => w.slug === "cups-01")!;
+---
+<Base locale={locale} page="home" title={tr(locale, "home.title")} description={tr(locale, "home.description")} extraLd={[breadcrumbLd([[tr(locale, "nav.home"), url(locale)]])]}>
+  <section class="editorial-hero wrap">
+    <div class="editorial-hero__copy">
+      <span class="editorial-hero__mark" aria-hidden="true"></span>
+      <h1>{tr(locale, "home.heroLine1")}<br />{tr(locale, "home.heroLine2")}<br /><em>{tr(locale, "home.heroLine3")}</em></h1>
+      <p>{tr(locale, "home.heroBody")}</p>
+      <div class="editorial-hero__actions">
+        <a class="editorial-button" href={url(locale, "gallery")}>{tr(locale, "home.cta")} <Icon name="arrow-right" /></a>
+        <a class="editorial-link" href={url(locale, "contact")}>{tr(locale, "home.orderCta")} <Icon name="arrow-right" /></a>
+      </div>
+    </div>
+    <a class="editorial-hero__visual" href={url(locale, "gallery", hero.slug)} aria-label={`${tr(locale, "home.viewWork")}: ${field(hero.title, locale)}`}>
+      <img src={asset("artworks/" + hero.images!.main)} alt={field(hero.title, locale)} width="896" height="1200" fetchpriority="high" />
+      <span class="editorial-hero__caption"><span>{field(hero.title, locale).replace(/\s+\d+$/u, "")}</span><Icon name="arrow-right" /></span>
+    </a>
+    <div class="editorial-hero__side" aria-hidden="true">MARIAM ART · ARMENIA</div>
+  </section>
+
+  <section class="editorial-section editorial-discover wrap" aria-labelledby="discover-title">
+    <div class="editorial-heading"><div><h2 id="discover-title">{tr(locale, "home.discoverTitle")}</h2><p>{tr(locale, "home.discoverBody")}</p></div><a class="editorial-link" href={url(locale, "gallery")}>{tr(locale, "home.worksAction")} <Icon name="arrow-right" /></a></div>
+    <div class="collection-strip" tabindex="0" aria-label={tr(locale, "home.discoverTitle")}>
+      {categories.map((c) => <a class="collection-tile" href={`${url(locale, "gallery")}?c=${c.id}`}>
+        <div class="collection-tile__image"><img src={asset("artworks/" + c.cover!.images!.main)} alt="" width="600" height="800" loading="lazy" /></div>
+        <span>{field(c.name, locale)} <Icon name="arrow-right" /></span>
+      </a>)}
+    </div>
+  </section>
+
+  <section class="editorial-section editorial-selected wrap" aria-labelledby="selected-title">
+    <div class="editorial-heading"><div><h2 id="selected-title">{tr(locale, "home.worksTitle")}</h2><p>{tr(locale, "home.selectedIntro")}</p></div><a class="editorial-link" href={url(locale, "gallery")}>{tr(locale, "home.worksAction")} <Icon name="arrow-right" /></a></div>
+    <div class="editorial-works">{works.map((w, i) => <WorkCard item={w} locale={locale} index={i + 1} variant="below" />)}</div>
+  </section>
+
+  <section class="editorial-story wrap">
+    <div class="editorial-story__image"><img src={asset("artworks/" + story.images!.main)} alt={field(story.title, locale)} width="896" height="1200" loading="lazy" /></div>
+    <div class="editorial-story__copy"><h2>{tr(locale, "home.aboutTitle1")}<br />{tr(locale, "home.aboutTitle2")}</h2><p>{tr(locale, "home.aboutBody")}</p><span class="editorial-signature">Mariam</span><a class="editorial-link" href={url(locale, "about")}>{tr(locale, "home.aboutCta")} <Icon name="arrow-right" /></a></div>
+  </section>
+
+  <section class="editorial-section editorial-commission wrap">
+    <div><h2>{tr(locale, "home.commissionTitle")}</h2><p>{tr(locale, "home.commissionBody")}</p><a class="editorial-button" href={url(locale, "contact")}>{tr(locale, "home.orderCta")} <Icon name="arrow-right" /></a></div>
+    <div class="editorial-steps"><div><Icon name="mail" /><h3>{tr(locale, "home.orderStep1Title")}</h3><p>{tr(locale, "home.orderStep1Body")}</p></div><div><Icon name="heart" /><h3>{tr(locale, "home.orderStep2Title")}</h3><p>{tr(locale, "home.orderStep2Body")}</p></div><div><Icon name="check" /><h3>{tr(locale, "home.orderStep3Title")}</h3><p>{tr(locale, "home.orderStep3Body")}</p></div></div>
+  </section>
+  <section class="section section--alt section--rule">
+    <div class="wrap split">
+      <div>
+        <p class="eyebrow gold">{tr(locale, "home.newsKicker")}</p>
+        <h2 class="h3 mt-sm">{tr(locale, "home.newsTitle")}</h2>
+        <p class="body-sm mt-sm measure-sm">{tr(locale, "home.newsBody")}</p>
+      </div>
+      <form
+        class="stack gap-sm"
+        data-newsletter
+        data-access-key={FORMS.web3formsAccessKey}
+      >
+        <input
+          type="hidden"
+          name="access_key"
+          value={FORMS.web3formsAccessKey}
+        />
+        <input
+          type="hidden"
+          name="subject"
+          value="Newsletter signup — mariam-art"
+        />
+        <input
+          type="hidden"
+          name="from_name"
+          value="Mariam-Art website"
+        />
+        <input
+          type="checkbox"
+          name="botcheck"
+          class="form__honey"
+          tabindex="-1"
+          autocomplete="off"
+        />
+        <label
+          class="sr-only"
+          for="news-email"
+        >
+          {tr(locale, "home.newsPlaceholder")}
+        </label>
+        <input
+          class="field__input"
+          id="news-email"
+          type="email"
+          name="email"
+          required
+          placeholder={tr(locale, "home.newsPlaceholder")}
+          autocomplete="email"
+        />
+        <button
+          class="btn btn--filled"
+          type="submit"
+        >
+          {tr(locale, "home.newsButton")}
+        </button>
+        <p
+          class="caption"
+          data-newsletter-note
+          hidden
+        ></p>
+      </form>
+    </div>
+  </section>
+</Base>
